@@ -4,229 +4,271 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class Test implements ActionListener{
-    
+public class FitnessApp implements ActionListener {
+    private JFrame frame;
+    private JPanel panel;
+    private JMenuBar menuBar;
+    private JMenuItem stepTrackerItem, waterIntakeItem;
+    private JButton backButton, checkButton, wcheckButton;
+    private JLabel textStep,textWater;
+    private JLabel welcomeLabel, goalLabel, currentLabel, resultLabel,textLabel1,textLabel2;
+    private JTextField goalTextField, currentTextField;
+    private JLabel watergoalLabel, watercurrentLabel, wresultLabel;
+    private JTextField watergoalTextField, watercurrentTextField;
+    JButton ExitButton = new JButton("Exit App");
+
     Font f= new Font("Baskerville Old Face",Font.BOLD,24);
     Font f2= new Font("Baskerville Old Face",Font.PLAIN,20);
     Font f3= new Font("Baskerville Old Face",Font.ITALIC,18);
 
-    JFrame frame=new JFrame();
-    JPanel panel=new JPanel();
-    JLabel text=new JLabel("Fitness-Tracker App");
-    JLabel userLabel = new JLabel("User ID:");
-    JTextField userText = new JTextField(20);
-    JLabel ageLabel = new JLabel("Age:");
-    JTextField ageText = new JTextField(20);
-    JButton signupButton = new JButton("Sign Up");
-    JButton cancelButton = new JButton("Cancel");
-    JLabel message = new JLabel();
-    JFrame startupFrame = new JFrame("Fitness App");
-    JButton stepTrackerButton = new JButton("Step Tracker");
-    JButton caloriesCalculatorButton = new JButton("Calories Calculator");
-    JButton waterIntakeCheckerButton = new JButton("Water Intake Checker");
-    JButton ExitButton = new JButton("Exit App");
-    JButton submitButton=new JButton("Check");
 
-
-    public Test(){  //for the login page
-        
-        //frame for the app
-        frame.setSize(500,700);
-        //title for app
-        frame.setTitle("FitTrack 101");
+    public FitnessApp() {
+        frame = new JFrame("FitTrack 101");
+        panel = new JPanel();
+        Color color = new Color(88, 134, 209);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setResizable(false); //prevetns frame from being resized
-        panel.setBackground(Color.cyan);
-        frame.setVisible(true);
+        frame.setResizable(false); //prevents frame from being resized
+        panel.setBackground(color);
+        
+        menuBar = new JMenuBar();
+        stepTrackerItem = new JMenuItem("Step Tracker");
+        waterIntakeItem = new JMenuItem("Water Intake");
+        textStep=new JLabel("Check your steps!");
+        textWater=new JLabel("Check your H2O!");
+
+        textStep.setBounds(145,30,300,30);
+        textWater.setBounds(145,30,300,30);
+        textWater.setFont(f);
+        textStep.setFont(f);
+
+        backButton = new JButton("Back");
+        checkButton = new JButton("Check");
+        wcheckButton = new JButton("Check");
+        ExitButton.setBounds(145, 500, 200, 30);
+        ExitButton.addActionListener(this);
+        ExitButton.setFont(f2);
+        panel.add(ExitButton);
+
+
+        welcomeLabel = new JLabel("Welcome!");
+        textLabel1=new JLabel("To check your fitness for today,");
+        textLabel2=new JLabel("choose an option from the Menu Bar ^_^");
+
+        goalLabel = new JLabel("Enter your goal steps:");
+        currentLabel = new JLabel("Enter your current steps:");
+        resultLabel = new JLabel();
+        resultLabel = new JLabel();
+
+
+        goalTextField = new JTextField();
+        currentTextField = new JTextField();
+
+        watergoalLabel = new JLabel("Goal number of glasses:");
+        watercurrentLabel = new JLabel("Consumed amount of glasses:");
+        wresultLabel = new JLabel();
+
+        watergoalTextField = new JTextField();
+        watercurrentTextField = new JTextField();
+
+        //adding to the bar
+        menuBar.add(stepTrackerItem);
+        menuBar.add(waterIntakeItem);
+
+        backButton.addActionListener(this);
+        stepTrackerItem.addActionListener(this);
+        waterIntakeItem.addActionListener(this);
+        checkButton.addActionListener(this);
+        wcheckButton.addActionListener(this);
+
+        panel.add(textLabel1);
+        panel.add(textLabel2);
+        textLabel1.setFont(f3);
+        textLabel2.setFont(f3);
+
         panel.setLayout(null);
+        welcomeLabel.setBounds(180, 100, 200, 50);
+        textLabel1.setBounds(115,180,300,60);
+        textLabel2.setBounds(90,250,330,60);
+        welcomeLabel.setFont(f);
+        goalLabel.setFont(f3);
+        currentLabel.setFont(f3);
+        resultLabel.setFont(f2);
+        watergoalLabel.setFont(f3);
+        watercurrentLabel.setFont(f3);
+        wresultLabel.setFont(f2);
 
-        text.setBounds(127,100,250,30);
-        text.setFont(f);
-        panel.add(text);
-        
-        userLabel.setBounds(80, 200, 80, 25);
-        userLabel.setFont(f2);
-        panel.add(userLabel);
-        
-        userText.setBounds(170, 200, 160, 25);
-        panel.add(userText);
-    
-        ageLabel.setBounds(80, 300, 80, 25);
-        ageLabel.setFont(f2);
-        panel.add(ageLabel); 
-        
-        ageText.setBounds(170, 300, 160, 25);
-        panel.add(ageText);
-        
-        signupButton.setBounds(180, 450, 110, 25);
-        signupButton.setFont(f2);
-        signupButton.addActionListener(this);
-        panel.add(signupButton);
-        
-        cancelButton.setBounds(180, 500, 110, 25);
-        cancelButton.setFont(f2);
-        cancelButton.addActionListener(this);
-        panel.add(cancelButton);
-        
-        panel.add(message);
-        frame.add(panel);
-        
-    }
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        
-        if (e.getSource()==signupButton){
-            try{
-                String user=userText.getText();
-                int age=0;  //takes in the name and age of the user
-
-                try{
-                    age=Integer.parseInt(ageText.getText());
-                } catch(NumberFormatException ex){
-                    JOptionPane.showMessageDialog(frame, "Please enter a valid age.", "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-                //to show the menu page
-                if (age<=15){
-                    JOptionPane.showMessageDialog(frame, "Too young for a workout! Closing app now :)","Age too small!", JOptionPane.INFORMATION_MESSAGE);
-                    frame.dispose();
-                    return;
-                }
-                else if(age>15 && age<50){
-                    JOptionPane.showMessageDialog(frame, "You fall in the adult zone!","Right age!", JOptionPane.INFORMATION_MESSAGE);
-                    //return;
-                }
-                else if(age>50 &&age<80){
-                    JOptionPane.showMessageDialog(frame, "You fall in the elder zone!","Right age!", JOptionPane.INFORMATION_MESSAGE);
-                    //return;
-                }
-                else{
-                    JOptionPane.showMessageDialog(frame, "Too old for a workout! Closing app now :)","Age too high!", JOptionPane.INFORMATION_MESSAGE);
-                    frame.dispose();
-                    return;
-                }
-        
-                panel.removeAll();
-
-                JLabel welcome=new JLabel("Welcome, "+ user+"!");
-                JLabel welcome2=new JLabel("What would you like to choose today?");
-                welcome.setBounds(50,70,300,50);
-                welcome.setFont(f3);
-                panel.add(welcome);
-                welcome2.setBounds(50,100,500,100);
-                welcome2.setFont(f3);
-                panel.add(welcome2);
-
-                panel.setLayout(null);
-                
-                stepTrackerButton.setBounds(100, 200, 300, 40);
-                stepTrackerButton.addActionListener(this);
-                stepTrackerButton.setFont(f2);
-                panel.add(stepTrackerButton);
-                
-                caloriesCalculatorButton.setBounds(100, 300, 300, 40);
-                caloriesCalculatorButton.addActionListener(this);
-                caloriesCalculatorButton.setFont(f2);
-                panel.add(caloriesCalculatorButton);
-                
-                waterIntakeCheckerButton.setBounds(100, 400, 300, 40);
-                waterIntakeCheckerButton.addActionListener(this);
-                waterIntakeCheckerButton.setFont(f2);
-                panel.add(waterIntakeCheckerButton);
-
-                ExitButton.setBounds(100, 500, 300, 40);
-                ExitButton.addActionListener(this);
-                ExitButton.setFont(f2);
-                panel.add(ExitButton);
-                
-                startupFrame.setSize(500, 700);
-                startupFrame.setLayout(null);
-                startupFrame.setVisible(true);
-                startupFrame.add(panel);
-
-            }
-            catch (Exception ex){
-                message.setText("An error occured.");
-            } 
-
-        }else if (e.getSource()==stepTrackerButton){
-            //JOptionPane.showMessageDialog(frame, "Step Tracker!", "TrackSteps", JOptionPane.INFORMATION_MESSAGE);
-            panel.removeAll();
-            panel.setLayout(null);
-            int goal, current;
-            JFrame stepsFrame=new JFrame();
-
-            JTextField goalTextField=new JTextField();
-            JTextField currentTextField=new JTextField();
+        backButton.setBounds(185, 500, 100, 40);
+        backButton.setFont(f3);
             
-            JLabel goalSteps=new JLabel("Set your goal:");
-            JLabel currentSteps=new JLabel("Covered steps:");
+        //adding items to panel
+        panel.add(welcomeLabel);
 
-            goalSteps.setBounds(50,130,100,50);
-            goalTextField.setBounds(200,130,100,50);
-            panel.add(goalSteps);
+        frame.setJMenuBar(menuBar);
+        frame.add(panel);
+        frame.setSize(500, 700);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
+    }
+
+    public void actionPerformed(ActionEvent e) {
+
+        try{ //handling exceptions
+        if (e.getSource() == backButton) {
+
+            panel.removeAll();
+            panel.repaint();
+            welcomeLabel.setText("Welcome.");
+            panel.add(welcomeLabel);
+            welcomeLabel.setFont(f);
+            panel.add(textLabel1);
+            panel.add(ExitButton);
+            panel.add(textLabel2);
+            textLabel1.setFont(f3);
+            textLabel2.setFont(f3);
+
+            panel.setLayout(null);
+            welcomeLabel.setBounds(180, 100, 200, 50);
+            textLabel1.setBounds(115,180,300,60);
+            textLabel2.setBounds(90,250,330,60);
+                
+            frame.setContentPane(panel);
+            frame.revalidate();
+            frame.repaint();
+        } else if (e.getSource() == stepTrackerItem) {
+
+            panel.removeAll();
+            panel.repaint();
+            panel.add(textStep);
+            goalTextField.setText("");
+            currentTextField.setText("");
+
+            goalLabel.setBounds(50, 150, 200, 50);
+            panel.add(goalLabel);
+
+            goalTextField.setBounds(300, 150, 100, 50);
             panel.add(goalTextField);
 
-            currentSteps.setBounds(50,200,100,50);
-            currentTextField.setBounds(200,200,100,50);
-            panel.add(currentSteps);
+            currentLabel.setBounds(50, 250, 200, 50);
+            panel.add(currentLabel);
+
+            currentTextField.setBounds(300, 250, 100, 50);
             panel.add(currentTextField);
-            
-            JLabel welcomeSteps=new JLabel("Here's your Step Tracker!");
-            welcomeSteps.setBounds(50,50,300,50);
-            welcomeSteps.setFont(f3);
-            panel.add(welcomeSteps);
 
+            checkButton.setBounds(185, 365, 100, 50);
+            panel.add(checkButton);
+            panel.add(backButton);
 
-            
-            submitButton.setBounds(180,300,100,50);
-            panel.add(submitButton);
+            frame.setContentPane(panel);
+            frame.revalidate();
+            frame.repaint();
 
-            stepsFrame.setSize(500, 700);
-            stepsFrame.setLayout(null);
-            stepsFrame.setVisible(true);
-            stepsFrame.add(panel);
-
-            
-            if (e.getSource()==submitButton){
-                try {
-                    goal = Integer.parseInt(goalTextField.getText());
-                } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(frame, "Please enter a valid goal value.","Result",JOptionPane.INFORMATION_MESSAGE);
+        } else if (e.getSource() == checkButton) {
+            int goal,current;
+            try{
+                goal = Integer.parseInt(goalTextField.getText());
+                }catch (NumberFormatException ex){
+                    JOptionPane.showMessageDialog(frame, "Please enter a valid amount.", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
-                try {
-                    current = Integer.parseInt(currentTextField.getText());
-                } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(frame, "Please enter a valid current value.","Result",JOptionPane.INFORMATION_MESSAGE);
+                try{
+                current = Integer.parseInt(currentTextField.getText());
+                }catch (NumberFormatException ex){
+                    JOptionPane.showMessageDialog(frame, "Please enter a valid amount.", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
-    
-                // Check if the current value has reached the goal value
-                if (current >= goal) {
-                    JOptionPane.showMessageDialog(frame, "Goal reached!","Result",JOptionPane.INFORMATION_MESSAGE);
-                } else {
-                    JOptionPane.showMessageDialog(frame, "Walk a little more!","Result",JOptionPane.INFORMATION_MESSAGE);
-                }
+
+            String result;
+
+            if (current >= goal) {
+                result = "Goal reached!";
+            } else {
+                result = "Walk a little more!";
             }
+
+            resultLabel.setText(result);
+            resultLabel.setBounds(170, 420, 150, 50);
+            panel.add(resultLabel);
+            panel.add(backButton);
+
+            frame.setContentPane(panel);
+            frame.revalidate();
+            frame.repaint();
+
+        } else if(e.getSource() == waterIntakeItem) {
             
-        }
-        else if(e.getSource()==caloriesCalculatorButton){
-            JOptionPane.showMessageDialog(frame, "Calories Calculator!", "CalculateCal", JOptionPane.INFORMATION_MESSAGE);
-        }
-        else if(e.getSource()==waterIntakeCheckerButton){
-            JOptionPane.showMessageDialog(frame, "Water Intake Checker!!", "WaterIntake", JOptionPane.INFORMATION_MESSAGE);
-        }
-        else if(e.getSource()==ExitButton){
-            JOptionPane.showMessageDialog(frame, "Done for today?", "Leaving?", JOptionPane.YES_OPTION);
-            //exit somehow
+            panel.removeAll();
+            panel.repaint();
+            panel.add(textWater);
+
+            watergoalTextField.setText("");
+            watercurrentTextField.setText("");
+
+            watergoalLabel.setBounds(50, 150, 300, 50);
+            panel.add(watergoalLabel);
+
+            watergoalTextField.setBounds(300, 150, 100, 50);
+            panel.add(watergoalTextField);
+
+            watercurrentLabel.setBounds(50, 250, 300, 50);
+            panel.add(watercurrentLabel);
+
+            watercurrentTextField.setBounds(300, 250, 100, 50);
+            panel.add(watercurrentTextField);
+
+            wcheckButton.setBounds(185, 365, 100, 50);
+            panel.add(wcheckButton);
+            panel.add(backButton);
+
+        }else if (e.getSource() == wcheckButton) {
+            int wgoal,wcurrent;
+            try{
+            wgoal = Integer.parseInt(watergoalTextField.getText());
+            }catch (NumberFormatException ex){
+                JOptionPane.showMessageDialog(frame, "Please enter a valid amount.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            try{
+            wcurrent = Integer.parseInt(watercurrentTextField.getText());
+            }catch (NumberFormatException ex){
+                JOptionPane.showMessageDialog(frame, "Please enter a valid amount.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            String result;
+
+            if (wcurrent >= wgoal) {
+                result = "Goal reached!";
+            } else {
+                result = "Drink a little more!";
+            }
+
+            wresultLabel.setText(result);
+            wresultLabel.setBounds(170, 420, 150, 50);
+            panel.add(wresultLabel);
+            panel.add(backButton);
+
+            frame.setContentPane(panel);
+            frame.revalidate();
+            frame.repaint();
+
+        } else if(e.getSource()==ExitButton){
+            int confirmed = JOptionPane.showConfirmDialog(frame, "Are you sure you want to exit the program?", "Exit Program Message Box",JOptionPane.YES_NO_OPTION);
+
+            if (confirmed == JOptionPane.YES_OPTION) {
+            frame.dispose();
+            }
         }
         else{
             frame.dispose();
         }
-    }
+    }catch (Exception ex){
+            JOptionPane.showMessageDialog(frame,"An error occured.","Error",JOptionPane.INFORMATION_MESSAGE);
+        }
+}
 
-    public static void main(String[] args){
-        new Test();
+    public static void main(String[] args) {
+        new FitnessApp();
+   
     }
 }
+
